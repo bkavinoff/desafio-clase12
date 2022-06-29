@@ -48,7 +48,8 @@ class Contenedor {
             }
 
             //retorno
-            res.status(200).send(`Se ha creado el producto ${obj.nombre}, y se le asignó el id ${obj.id}`)
+            //res.status(200).send(`Se ha creado el producto ${obj.nombre}, y se le asignó el id ${obj.id}`)
+            return
             
         }catch(err){
             console.log('Hubo un error al intentar guardar: ', err);

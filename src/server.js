@@ -38,16 +38,42 @@ const expressServer=app.listen(port, (err) =>{
 })
 const io = new IOServer(expressServer)
 
+const messagesArray = []
+
 io.on('connection', socket =>{
     console.log(`Se conectó un cliente con id: ${socket.id}`)
 
     //inicializo el contenedor con el archivo de productos
     const contenedor = new Contenedor(path.join(__dirname, './productos.txt'));
 
-    //obtengo el listado de productos:
+    //obtengo el listado de productos y lo envío al cliente que se conectó:
     contenedor.getAll().then(listProductos =>{
-        console.log(listProductos)
+        //console.log(listProductos)
         socket.emit('server:ListProducts', listProductos)
-    })    
+    })
+    
+    socket.on('client:addProduct', productInfo => {
+        
+        //agrego el producto:
+        contenedor.add(productInfo).then( ()=>{
+            //obtengo el listado de productos:
+            contenedor.getAll().then(listProductos =>{
+                //console.log(listProductos)
+
+                //envío el listado actualizado a todos los clientes
+                io.emit('server:ListProducts', listProductos)
+            })
+        })
+    })
+
+    //le envío el listado de mensajes del chat al cliente que entró:
+    socket.emit('server:renderMessages', messagesArray)
+
+    //recibo nuevo mensaje del cliente
+    socket.on('client:addMessage', messageInfo => {
+        messagesArray.push(messageInfo)
+
+        io.emit('server:renderMessages', messagesArray)
+    })
 })
 
