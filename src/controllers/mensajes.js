@@ -10,7 +10,7 @@ class Mensajes {
         try{
             if (fs.existsSync(this.path)){
                 
-                //el archivo existe, obtengo los productos
+                //el archivo existe, obtengo los mensajes
                 let messages = await fs.promises.readFile(this.path, 'utf-8');
 
                 let arrMensajes = [];
@@ -29,19 +29,19 @@ class Mensajes {
                     obj.id = arrMensajes.length + 1;
                 }
 
-                //agrego el producto al array
+                //agrego el mensaje al array
                 arrMensajes.push(obj);
                 
-                //sobreescribo el archivo con el nuevo producto
+                //sobreescribo el archivo con el nuevo mensaje
                 await fs.promises.writeFile(this.path, JSON.stringify(arrMensajes));
-                console.log("Agregado el producto a la lista con id: ", obj.id)
+                //console.log("Agregado el mensaje a la lista con id: ", obj.id)
             }else{
                 //seteo el id 1 a mi obj
                 obj.id = 1;
 
                 //no existe el archivo, lo creo
                 await fs.promises.writeFile(this.path, JSON.stringify([obj]));
-                console.log("Agregado el producto a la lista con id: ", obj.id)
+                //console.log("Agregado el mensaje a la lista con id: ", obj.id)
             }
             return
             
@@ -53,7 +53,7 @@ class Mensajes {
     async getMessagesCount(){
         try{
             if (fs.existsSync(this.path)){                
-                //el archivo existe, obtengo los productos
+                //el archivo existe, obtengo los mensajes
                 let messages = await fs.promises.readFile(this.path, 'utf-8');
                 
                 //parseo de string a jsonObject
@@ -73,7 +73,7 @@ class Mensajes {
     async getAll(){
         try{
             if (fs.existsSync(this.path)){                
-                //el archivo existe, obtengo los productos
+                //el archivo existe, obtengo los mensajes
                 let messages = await fs.promises.readFile(this.path, 'utf-8');
                 
                 //parseo de string a jsonObject

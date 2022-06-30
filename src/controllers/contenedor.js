@@ -37,14 +37,14 @@ class Contenedor {
                 
                 //sobreescribo el archivo con el nuevo producto
                 await fs.promises.writeFile(this.path, JSON.stringify(arrProductos));
-                console.log("Agregado el producto a la lista con id: ", obj.id)
+                //console.log("Agregado el producto a la lista con id: ", obj.id)
             }else{
                 //seteo el id 1 a mi obj
                 obj.id = 1;
 
                 //no existe el archivo, lo creo
                 await fs.promises.writeFile(this.path, JSON.stringify([obj]));
-                console.log("Agregado el producto a la lista con id: ", obj.id)
+                //console.log("Agregado el producto a la lista con id: ", obj.id)
             }
 
             return
