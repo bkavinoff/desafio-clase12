@@ -1,13 +1,18 @@
 
+//importo dotenv para poder acceder a las variables de entorno que declare en el archivo .env
+require('dotenv').config()
+
 const express = require('express')
 const rutas = require('./routes/index')
 const path = require('path')
-const port = 8080
+const port = process.env.PORT //lee del archivo .env
+
 
 const app = express()
 
-//declaro mi clase contenedor
+//declaro mis controllers
 const Contenedor = require('./controllers/contenedor')
+const Mensajes = require('./controllers/mensajes')
 
 //archivos estaticos:
 app.use(express.static(path.join(__dirname,'../public')))
@@ -36,15 +41,14 @@ const expressServer=app.listen(port, (err) =>{
         console.log(`Servidor iniciado, escuchando en puerto: ${port}`)
     }
 })
-const io = new IOServer(expressServer)
 
-const messagesArray = []
+const io = new IOServer(expressServer)
 
 io.on('connection', socket =>{
     console.log(`Se conectó un cliente con id: ${socket.id}`)
 
     //inicializo el contenedor con el archivo de productos
-    const contenedor = new Contenedor(path.join(__dirname, './productos.txt'));
+    const contenedor = new Contenedor(path.join(__dirname, process.env.PRODUCTS_FILE));
 
     //obtengo el listado de productos y lo envío al cliente que se conectó:
     contenedor.getAll().then(listProductos =>{
@@ -58,7 +62,6 @@ io.on('connection', socket =>{
         contenedor.add(productInfo).then( ()=>{
             //obtengo el listado de productos:
             contenedor.getAll().then(listProductos =>{
-                //console.log(listProductos)
 
                 //envío el listado actualizado a todos los clientes
                 io.emit('server:ListProducts', listProductos)
@@ -66,14 +69,26 @@ io.on('connection', socket =>{
         })
     })
 
-    //le envío el listado de mensajes del chat al cliente que entró:
-    socket.emit('server:renderMessages', messagesArray)
+
+    //inicializo el contenedor con el archivo de productos
+    const mensajes = new Mensajes(path.join(__dirname, process.env.MESSAGES_FILE));
+
+    //obtengo el listado de productos y lo envío al cliente que se conectó:
+    mensajes.getAll().then(messagesArray =>{
+        //console.log(messagesArray)
+        socket.emit('server:renderMessages', messagesArray)
+    })
 
     //recibo nuevo mensaje del cliente
     socket.on('client:addMessage', messageInfo => {
-        messagesArray.push(messageInfo)
-
-        io.emit('server:renderMessages', messagesArray)
+        //agrego el mensaje:
+        mensajes.add(messageInfo).then( ()=>{
+            //obtengo el listado de productos:
+            mensajes.getAll().then(messagesArray =>{
+                //envío el listado actualizado a todos los clientes:
+                io.emit('server:renderMessages', messagesArray)
+            })
+        })
     })
 })
 

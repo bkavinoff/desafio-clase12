@@ -28,10 +28,8 @@ addMessageForm.addEventListener('submit', event => {
     let [date, time] = new Date().toLocaleString('en-GB').split(', ');
     const messageDateTime = date + ' - ' + time;
 
-    //console.log('DateTime:', messageDateTime)
-
     const messageInfo = {email:txtUserEmail.value, message:txtUserMessage.value, messageDateTime:messageDateTime}
-    //console.log(messageInfo)
+
     SendNewMessage(messageInfo)
 })
 
@@ -42,7 +40,7 @@ function RenderProduct(products){
             //vacío el contenedor de productos
             productsPool.innerHTML = "" 
 
-            //cargo los productos
+            //cargo los productos recibidos
             products.forEach(prod =>{
                 const template = Handlebars.compile(plantilla)
                 const html = template(prod)
@@ -63,17 +61,17 @@ function RenderAddProductForm(){
 }
 
 function RenderMessages(messagesInfo){
-    const html = messagesInfo.map((msg) => {
-        return (`<div>
-        <strong style="color:blue">${msg.email} </strong>
-        <span style="color:brown">[${msg.messageDateTime}]: </span>
-        <em style="color:green">${msg.message}</em>
-        </div>`)
-    }).join(' ')
-    chatPool.innerHTML=html
+    if (messagesInfo != 'No hay mensajes'){
+        const html = messagesInfo.map((msg) => {
+            return (`<div>
+            <strong style="color:blue">${msg.email} </strong>
+            <span style="color:brown">[${msg.messageDateTime}]: </span>
+            <em style="color:green">${msg.message}</em>
+            </div>`)
+        }).join(' ')
+        chatPool.innerHTML=html
+    }
 }
-
-
 
 //MESSAGES TO THE SERVER
 function SendNewProduct(productInfo){

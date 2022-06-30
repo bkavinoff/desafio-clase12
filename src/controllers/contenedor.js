@@ -3,7 +3,7 @@ const fs = require('fs');
 class Contenedor {
     constructor (nombreArchivo) {
         this.path = nombreArchivo;
-        console.log('Path del archivo creado: ', nombreArchivo)
+        //console.log('Path del archivo creado: ', nombreArchivo)
     }
 
     async add(obj) {
@@ -47,8 +47,6 @@ class Contenedor {
                 console.log("Agregado el producto a la lista con id: ", obj.id)
             }
 
-            //retorno
-            //res.status(200).send(`Se ha creado el producto ${obj.nombre}, y se le asignó el id ${obj.id}`)
             return
             
         }catch(err){
