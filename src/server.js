@@ -5,7 +5,7 @@ require('dotenv').config()
 const express = require('express')
 const rutas = require('./routes/index')
 const path = require('path')
-const port = process.env.PORT //lee del archivo .env
+const port = 8080 //lee del archivo .env
 
 
 const app = express()
@@ -48,7 +48,7 @@ io.on('connection', socket =>{
     console.log(`Se conectó un cliente con id: ${socket.id}`)
 
     //inicializo el contenedor con el archivo de productos
-    const contenedor = new Contenedor(path.join(__dirname, process.env.PRODUCTS_FILE));
+    const contenedor = new Contenedor(path.join(__dirname, './txtPersist/productos.txt'));
 
     //obtengo el listado de productos y lo envío al cliente que se conectó:
     contenedor.getAll().then(listProductos =>{
@@ -71,7 +71,7 @@ io.on('connection', socket =>{
 
 
     //inicializo el contenedor con el archivo de productos
-    const mensajes = new Mensajes(path.join(__dirname, process.env.MESSAGES_FILE));
+    const mensajes = new Mensajes(path.join(__dirname, './txtPersist/mensajes.txt'));
 
     //obtengo el listado de productos y lo envío al cliente que se conectó:
     mensajes.getAll().then(messagesArray =>{
